@@ -140,12 +140,6 @@ git-tree-sha1 = "4ae0ff1a3a556383f7b1b004f5fb964b26ac96c9"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
 version = "0.20.0"
 
-[[FITSIO]]
-deps = ["BinaryProvider", "Libdl", "Printf"]
-git-tree-sha1 = "6624bd0cdd03aa82df34d3eac56ab77ff696472e"
-uuid = "525bcba6-941b-5504-bd06-fd0dc1a4d2eb"
-version = "0.14.0"
-
 [[FixedPointNumbers]]
 git-tree-sha1 = "d14a6fa5890ea3a7e5dcab6811114f132fec2b4b"
 uuid = "53c48c17-4a7d-5ca2-90c5-79b7896eea93"
@@ -190,14 +184,6 @@ deps = ["ColorTypes", "FixedPointNumbers", "IterTools", "LinearAlgebra", "Static
 git-tree-sha1 = "2b0bfb379a54bdfcd2942f388f7d045f8952373d"
 uuid = "4d00f742-c7ba-57c2-abde-4428a4b178cb"
 version = "0.7.5"
-
-[[Healpix]]
-deps = ["FITSIO", "Printf", "RecipesBase", "Test"]
-git-tree-sha1 = "1055fe856c58a9cddab7db332dc505cbab7f384c"
-repo-rev = "master"
-repo-url = "https://github.com/cailmdaley/Healpix.jl.git"
-uuid = "ef1d1864-a8c4-11e9-1f31-07a69026a305"
-version = "0.1.0"
 
 [[InteractiveUtils]]
 deps = ["Markdown"]
