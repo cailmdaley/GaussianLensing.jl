@@ -11,7 +11,7 @@ using DelimitedFiles
 include("utils.jl")
 export read_Cℓs
 
-@reexport using Healpix
+# @reexport using Healpix
 # include("maps.jl")
 # export 
 # 	MaskedMap,
