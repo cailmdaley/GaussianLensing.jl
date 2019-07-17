@@ -37,6 +37,7 @@ include("spherical_neighborhood.jl")
 
 using Jacobi
 using Interpolations
+using Distances
 include("kriging.jl")
 export 
 	# CMBVariogram,
