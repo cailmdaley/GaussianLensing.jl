@@ -30,7 +30,7 @@ export read_Cℓs
 ############################################################################
 # Kriging & GeoStats 
 @reexport using GeoStats
-using GeoStatsBase 
+using GeoStatsBase, GeoStatsDevTools
 
 using NearestNeighbors
 include("spherical_neighborhood.jl")
