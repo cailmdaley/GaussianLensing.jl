@@ -179,6 +179,12 @@ git-tree-sha1 = "732b8e392a9402c07f4dc4ec094fe52b09c76392"
 uuid = "323cb8eb-fbf6-51c0-afd0-f8fba70507b2"
 version = "0.5.0"
 
+[[GeoStatsDevTools]]
+deps = ["GeoStatsBase", "Reexport"]
+git-tree-sha1 = "d39afa7679ea5e0e1236e669c29f3a49195ed303"
+uuid = "19e549d1-356f-5655-9f3d-c1d6136da705"
+version = "0.5.0"
+
 [[GeometryTypes]]
 deps = ["ColorTypes", "FixedPointNumbers", "IterTools", "LinearAlgebra", "StaticArrays"]
 git-tree-sha1 = "2b0bfb379a54bdfcd2942f388f7d045f8952373d"
