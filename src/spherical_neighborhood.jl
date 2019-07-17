@@ -6,7 +6,7 @@ A search method that finds `K` nearest neighbors in `domain`
 """
 
 struct (SphericalNeighborSearcher 
-        <: AbstractNeighborSearcher)
+        <: GeoStatsDevTools.AbstractNeighborSearcher)
   tree::BallTree
   K::Int
   locs::Vector{Int}
