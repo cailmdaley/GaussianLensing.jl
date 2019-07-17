@@ -189,7 +189,7 @@ version = "0.7.5"
 deps = ["FITSIO", "Printf", "RecipesBase", "Test"]
 git-tree-sha1 = "02ab3dab282d526b9b583e24d0eaa4d130d3ed3b"
 repo-rev = "master"
-repo-url = "https://github.com/cailmdaley/Healpix.jl"
+repo-url = "https://github.com/cailmdaley/Healpix.jl.git"
 uuid = "9f4e344d-96bc-545a-84a3-ae6b9e1b672b"
 version = "2.1.0"
 
