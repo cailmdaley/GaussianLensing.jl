@@ -12,7 +12,7 @@ function CMBVariogram()
 	Δβs = range(0, lookup_table[end,1], length=size(lookup_table)[1])
 	scaled_γinterpolator  = Interpolations.scale(γinterpolator, Δβs)
 	
-	return CMBVariogram(Cℓs, Haversine(1.0), scaled_γinterpolator)
+	return CMBVariogram(Cℓs, GeoStatsBase.Haversine(1.0), scaled_γinterpolator)
 end
 (γ::CMBVariogram)(Δβ::Float64) = γ.γinterpolator(Δβ) # γ.σ₀² - CMBcov(Δβ, γ.Cℓs)
 (γ::CMBVariogram)(βx, βy) = γ(evaluate(γ.distance, βx, βy))
