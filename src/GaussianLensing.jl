@@ -1,8 +1,5 @@
 module GaussianLensing
-
-using Reexport 
-@reexport using Unitful, UnitfulAstro
-@reexport using Plots, LaTeXStrings
+using Reexport
 
 ############################################################################
 # Utilties & Pycall
@@ -29,18 +26,19 @@ export read_Cℓs
 
 ############################################################################
 # Kriging & GeoStats 
-@reexport using GeoStats
-using GeoStatsBase, GeoStatsDevTools
 
-using NearestNeighbors
+@reexport using Unitful, UnitfulAstro
+using GeoStatsBase
+using Variography: Variogram
+using Distances: Metric, Haversine
+using Interpolations: interpolate, Linear, BSpline, ScaledInterpolation, scale
+using Jacobi: legendre
+
 include("spherical_neighborhood.jl")
-
-using Jacobi
-using Interpolations
-using Distances
 include("kriging.jl")
 export 
-	# CMBVariogram,
+	CMBVariogram, CachedCMBVariogram, cache,
+	𝚯, E, B, ϕ,
 	solve_kriging
 
 	

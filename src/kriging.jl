@@ -1,37 +1,70 @@
-struct (CMBVariogram{T <: Real, D <: Metric}
-		<: Variogram{T,D})
-	Cℓs::Vector{T}
-	distance::D
-	γinterpolator::Interpolations.ScaledInterpolation
-end
-function CMBVariogram()
-	Cℓs = read_Cℓs()
-	
-	lookup_table = readdlm("datafiles/CMB_variogram_lookup.txt")
-	γinterpolator = interpolate(lookup_table[:,2], BSpline(Linear())) 
-	Δβs = range(0, lookup_table[end,1], length=size(lookup_table)[1])
-	scaled_γinterpolator  = Interpolations.scale(γinterpolator, Δβs)
-	
-	return CMBVariogram(Cℓs, GeoStatsBase.Haversine(1.0), scaled_γinterpolator)
-end
-(γ::CMBVariogram)(Δβ::Float64) = γ.γinterpolator(Δβ) # γ.σ₀² - CMBcov(Δβ, γ.Cℓs)
-(γ::CMBVariogram)(βx, βy) = γ(evaluate(γ.distance, βx, βy))
-isstationary(::CMBVariogram)   = true
-
-function CMBcov(Δβ::Real, Cℓs::Vector) 
-	cosΔβ = cos(Δβ); count = 0.0
-	for ℓ in eachindex(Cℓs)
-		count += 2(ℓ-1) / (4π) * Cℓs[ℓ] * legendre(cosΔβ, ℓ-1) 
+function covariance(Δβ::Real, Cℓs::Vector)
+	cosΔβ = cos(Δβ)
+	count = 0.0
+	for ℓ in eachindex(Cℓs) .- 1
+		count += 2ℓ / (4π) * Cℓs[ℓ+1] * legendre(cosΔβ, ℓ) 
 	end
 	return count
 end
 
-@estimsolver CMBKriging begin
-  @param variogram = CMBVariogram()
-  @param K = 10
+abstract type CMBQuantity end
+abstract type 𝚯 <: CMBQuantity end
+abstract type E <: CMBQuantity end
+abstract type B <: CMBQuantity end
+abstract type ϕ <: CMBQuantity end
+
+abstract type AbstractCMBVariogram{Q <: CMBQuantity, T <: Real, D <: Metric} <: 
+			  Variogram{T,D} end
+
+struct CMBVariogram{Q, T, D} <: AbstractCMBVariogram{Q, T, D} 
+	Cℓs::Vector{T}
+	σ₀²::T
+	distance::D
 end
 
-using GaussianLensing: SphericalNeighborSearcher
+function CMBVariogram{Q}(Cℓs::Vector{T}) where {Q, T}
+	CMBVariogram{Q, T, Haversine}(Cℓs, covariance(0, Cℓs), Haversine(1.0))
+end
+
+(γ::CMBVariogram)(Δβ::Float64) = γ.σ₀² - covariance(Δβ, γ.Cℓs)
+(γ::CMBVariogram)(βx, βy) = γ(evaluate(γ.distance, βx, βy))
+isstationary(::CMBVariogram) = true
+
+function cache(γ::CMBVariogram, Δβs, path)
+	variogram_vals  = [γ.σ₀² - covariance(Δβ, γ.Cℓs) for Δβ in Δβs]
+	writedlm(path, [Δβs variogram_vals])
+end
+
+
+
+
+struct CachedCMBVariogram{Q, T, D} <: AbstractCMBVariogram{Q, T ,D}
+	γinterpolator::ScaledInterpolation{T}
+	distance::D
+end
+
+function CachedCMBVariogram{Q}(lookup_table::Matrix{T}) where {T,Q}
+	Δβs = range(0, lookup_table[end,1], length=size(lookup_table)[1])
+	γs  = lookup_table[:,2]
+	
+	γinterpolator         = interpolate(γs, BSpline(Linear())) 
+	scaled_γinterpolator  = scale(γinterpolator, Δβs)
+	
+	return CachedCMBVariogram{Q, T, Haversine}(scaled_γinterpolator, 
+											   Haversine(1.0))
+end
+
+function CachedCMBVariogram{Q}(path::String) where Q <: CMBQuantity 
+	CachedCMBVariogram{Q}(readdlm(path))
+end
+(γ::CachedCMBVariogram)(Δβ::Float64) = γ.γinterpolator(Δβ)
+(γ::CachedCMBVariogram)(βx, βy)      = γ(evaluate(γ.distance, βx, βy))
+isstationary(::CachedCMBVariogram)   = true
+
+@estimsolver CMBKriging begin
+  @param variogram=CMBVariogram{𝚯}(read_Cℓs())
+  @param K = 10
+end
 
 function preprocess(problem::EstimationProblem, solver::CMBKriging)
   # retrieve problem info
