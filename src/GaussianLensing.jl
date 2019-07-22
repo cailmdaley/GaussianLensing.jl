@@ -8,21 +8,21 @@ using DelimitedFiles
 include("utils.jl")
 export read_Cℓs
 
-# @reexport using Healpix
-# include("maps.jl")
-# export 
-# 	MaskedMap,
-# 	makeCMB, makeCMBmasked, 
-# 	make_αs, make_αs_masked,
-# 	reorder, 
-# 	getcoords,
-# 	plotCMB
+@reexport using Healpix
+include("maps.jl")
+export 
+	MaskedMap,
+	makeCMB, makeCMBmasked, 
+	make_αs, make_αs_masked,
+	reorder, 
+	getcoords,
+	plotCMB
 	
-# using PyCall; const healpy = PyNULL()
-# function __init__()
-#     copy!(healpy, pyimport("healpy"))
-# end
-# export healpy
+using PyCall; const healpy = PyNULL()
+function __init__()
+    copy!(healpy, pyimport("healpy"))
+end
+export healpy
 
 ############################################################################
 # Kriging & GeoStats 
