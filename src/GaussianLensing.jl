@@ -9,6 +9,7 @@ include("utils.jl")
 export read_Cℓs
 
 @reexport using Healpix
+using Plots
 include("maps.jl")
 export 
 	MaskedMap,

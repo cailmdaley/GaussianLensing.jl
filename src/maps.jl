@@ -44,7 +44,10 @@ end
 ###########################################################################
 # Methods for CMB Map Making
 
-makeCMB(nside) = Map(healpy.synfast(read_Cℓs(), nside))
+makeCMB(nside, Cℓs) = Map(healpy.synfast(Cℓs, nside))
+makeCMB(nside) = makeCMB(nside, read_Cℓs())
+makeCMB(nside, Cℓs, θlims, ϕlims) = MaskedMap(makeCMB(nside, Cℓs), 
+											  θlims, ϕlims)
 makeCMB(nside, θlims, ϕlims) = MaskedMap(makeCMB(nside), θlims, ϕlims)
 
 function make_αs(nside) 
