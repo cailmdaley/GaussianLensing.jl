@@ -8,11 +8,11 @@ abstract type Delensed  <: State end
 abstract type   Lensed  <: State end
 
 # struct Lens{T <: Number, P <: Plane, S <: State}
-# 	m::GenericMap{T}
+# 	m::AbstractMap{T}
 # end
-# Lens{P <: Plane, S<:State}(m::GenericMap{T}) = Lens{T,P,S}(m)
-# Lens{Source}(m::GenericMap) = Lens{Source,Unlensed}(m)
-# Lens{Image}(m::GenericMap) = Lens{Image,Lensed}(m)
+# Lens{P <: Plane, S<:State}(m::AbstractMap{T}) = Lens{T,P,S}(m)
+# Lens{Source}(m::AbstractMap) = Lens{Source,Unlensed}(m)
+# Lens{Image}(m::AbstractMap) = Lens{Image,Lensed}(m)
 # 
 # 
 # 

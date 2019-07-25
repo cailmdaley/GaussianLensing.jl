@@ -11,14 +11,12 @@ export read_Cℓs
 @reexport using Healpix
 using Plots
 include("maps.jl")
-export 
+export
 	MaskedMap,
-	makeCMB, makeCMBmasked, 
+	makeCMB, makeCMBmasked,
 	make_αs, make_αs_masked,
-	reorder, 
-	getcoords,
-	plotCMB
-	
+	plotmap
+
 using PyCall; const healpy = PyNULL()
 function __init__()
     copy!(healpy, pyimport("healpy"))
@@ -26,7 +24,7 @@ end
 export healpy
 
 ############################################################################
-# Kriging & GeoStats 
+# Kriging & GeoStats
 
 @reexport using Unitful, UnitfulAstro
 using GeoStatsBase
@@ -37,12 +35,12 @@ using Jacobi: legendre
 
 include("spherical_neighborhood.jl")
 include("kriging.jl")
-export 
+export
 	CMBVariogram, CachedCMBVariogram, cache,
 	𝚯, E, B, ϕ,
 	solve_kriging
 
-	
+
 ############################################################################
 # Lensing
 
@@ -51,5 +49,5 @@ export
 # 	HealpixLens,
 # 	lens
 
-	
+
 end # module GaussianLensing
