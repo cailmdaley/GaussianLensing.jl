@@ -1,8 +1,5 @@
 module GaussianLensing
-
-using Reexport 
-@reexport using Unitful, UnitfulAstro
-@reexport using Plots, LaTeXStrings
+using Reexport
 
 ############################################################################
 # Utilties & Pycall
@@ -11,39 +8,33 @@ using DelimitedFiles
 include("utils.jl")
 export read_Cℓs
 
-# @reexport using Healpix
-# include("maps.jl")
-# export 
-# 	MaskedMap,
-# 	makeCMB, makeCMBmasked, 
-# 	make_αs, make_αs_masked,
-# 	reorder, 
-# 	getcoords,
-# 	plotCMB
-	
-# using PyCall; const healpy = PyNULL()
-# function __init__()
-#     copy!(healpy, pyimport("healpy"))
-# end
-# export healpy
+@reexport using Healpix
+using Plots
+include("maps.jl")
+export
+	MaskedMap,
+	makeCMB, makeCMBmasked,
+	make_αs, make_αs_masked,
+	plotmap
 
 ############################################################################
-# Kriging & GeoStats 
-@reexport using GeoStats
-using GeoStatsBase, GeoStatsDevTools
+# Kriging & GeoStats
 
-using NearestNeighbors
+@reexport using Unitful, UnitfulAstro
+using GeoStatsBase
+using Variography: Variogram
+using Distances: Metric, Haversine
+using Interpolations: interpolate, Linear, BSpline, ScaledInterpolation, scale
+using Jacobi: legendre
+
 include("spherical_neighborhood.jl")
-
-using Jacobi
-using Interpolations
-using Distances
 include("kriging.jl")
-export 
-	# CMBVariogram,
+export
+	CMBVariogram, CachedCMBVariogram, cache,
+	𝚯, E, B, ϕ,
 	solve_kriging
 
-	
+
 ############################################################################
 # Lensing
 
@@ -52,5 +43,5 @@ export
 # 	HealpixLens,
 # 	lens
 
-	
+
 end # module GaussianLensing

@@ -4,10 +4,8 @@
 A search method that finds `K` nearest neighbors in `domain`
 `locations` according to `metric`.
 """
-
-struct (SphericalNeighborSearcher 
-        <: GeoStatsDevTools.AbstractNeighborSearcher)
-  tree::BallTree
+struct (SphericalNeighborSearcher <: AbstractNeighborSearcher)
+  tree::GeoStatsBase.NearestNeighbors.BallTree
   K::Int
   locs::Vector{Int}
 end
@@ -18,13 +16,14 @@ function SphericalNeighborSearcher(domain::AbstractDomain,
   @assert 1 ≤ K ≤ length(locs) "number of neighbors must be smaller than number of data locations"
   @assert length(locs) ≤ npoints(domain) "number of data locations must be smaller than number of points"
   
-  balltree = BallTree(coordinates(domain, locs), 
-                      GeoStatsBase.Haversine(radius))
+  balltree = GeoStatsBase.NearestNeighbors.BallTree(
+              coordinates(domain, locs), 
+              GeoStatsBase.Haversine(radius))
+              
   SphericalNeighborSearcher(balltree, K, locs)
 end
 
 function search!(neighbors::AbstractVector{Int}, 
-  
                  xₒ::AbstractVector{T},
                  searcher::SphericalNeighborSearcher) where 
                  {T<:Real}
