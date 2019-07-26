@@ -216,8 +216,8 @@ version = "0.7.5"
 
 [[Healpix]]
 deps = ["FITSIO", "Printf", "PyCall", "RecipesBase", "Test"]
-git-tree-sha1 = "47d0a4181be4f6cebbea80e5a7c1979ee3fdcd7f"
-repo-rev = "master"
+git-tree-sha1 = "c0d03bf952b4cefe77120de5b7b495814aef772c"
+repo-rev = "dev"
 repo-url = "https://github.com/cailmdaley/Healpix.jl.git"
 uuid = "ef1d1864-a8c4-11e9-1f31-07a69026a305"
 version = "0.1.0"
