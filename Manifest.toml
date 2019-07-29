@@ -159,9 +159,9 @@ version = "0.20.0"
 
 [[FFMPEG]]
 deps = ["BinaryProvider", "Libdl"]
-git-tree-sha1 = "5fbb3092252b78c6082a5cce2316c60a6152fbc9"
+git-tree-sha1 = "1dd2128ff10894081f30931b355dc892d1352de9"
 uuid = "c87230d0-a227-11e9-1b43-d7ebe4e7570a"
-version = "0.2.1"
+version = "0.2.2"
 
 [[FITSIO]]
 deps = ["BinaryProvider", "Libdl", "Printf"]
@@ -215,8 +215,8 @@ uuid = "4d00f742-c7ba-57c2-abde-4428a4b178cb"
 version = "0.7.5"
 
 [[Healpix]]
-deps = ["FITSIO", "Printf", "PyCall", "RecipesBase", "Test"]
-git-tree-sha1 = "c0d03bf952b4cefe77120de5b7b495814aef772c"
+deps = ["DelimitedFiles", "FITSIO", "Printf", "PyCall", "RecipesBase", "Test"]
+git-tree-sha1 = "3a5e6b400b2d2f9c8794c1861573c78cc3f5dd86"
 repo-rev = "dev"
 repo-url = "https://github.com/cailmdaley/Healpix.jl.git"
 uuid = "ef1d1864-a8c4-11e9-1f31-07a69026a305"

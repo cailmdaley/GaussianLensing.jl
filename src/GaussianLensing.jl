@@ -4,12 +4,12 @@ using Reexport
 ############################################################################
 # Utilties & Pycall
 
-using DelimitedFiles
+@reexport using DelimitedFiles
 include("utils.jl")
 export read_Cℓs
 
 @reexport using Healpix
-using Plots
+@reexport using Plots
 include("maps.jl")
 export
 	MaskedMap,
@@ -22,17 +22,19 @@ export
 
 @reexport using Unitful, UnitfulAstro
 using GeoStatsBase
+using KrigingEstimators: OrdinaryKriging, fit, predict
 using Variography: Variogram
 using Distances: Metric, Haversine
 using Interpolations: interpolate, Linear, BSpline, ScaledInterpolation, scale
 using Jacobi: legendre
 
 include("spherical_neighborhood.jl")
-include("kriging.jl")
+include("interpolation.jl")
 export
-	CMBVariogram, CachedCMBVariogram, cache,
 	𝚯, E, B, ϕ,
-	solve_kriging
+	CMBVariogram, CachedCMBVariogram, cache,
+	CMBKriging, gp_interpolate
+
 
 
 ############################################################################
