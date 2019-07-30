@@ -6,36 +6,36 @@ A search method that finds `K` nearest neighbors in `domain`
 """
 struct (SphericalNeighborSearcher <: AbstractNeighborSearcher)
   tree::GeoStatsBase.NearestNeighbors.BallTree
-  K::Int
+  k::Int
   locs::Vector{Int}
 end
 
-function SphericalNeighborSearcher(domain::AbstractDomain, 
-                                   locs::AbstractVector{Int}, 
-                                   K::Int, radius=1.0)
-  @assert 1 ≤ K ≤ length(locs) "number of neighbors must be smaller than number of data locations"
+function SphericalNeighborSearcher(domain::AbstractDomain,
+                                   locs::AbstractVector{Int},
+                                   k::Int, radius=1.0)
+  @assert 1 ≤ k ≤ length(locs) "number of neighbors must be smaller than number of data locations"
   @assert length(locs) ≤ npoints(domain) "number of data locations must be smaller than number of points"
-  
+
   balltree = GeoStatsBase.NearestNeighbors.BallTree(
-              coordinates(domain, locs), 
+              coordinates(domain, locs),
               GeoStatsBase.Haversine(radius))
-              
-  SphericalNeighborSearcher(balltree, K, locs)
+
+  SphericalNeighborSearcher(balltree, k, locs)
 end
 
-function search!(neighbors::AbstractVector{Int}, 
+function search!(neighbors::AbstractVector{Int},
                  xₒ::AbstractVector{T},
-                 searcher::SphericalNeighborSearcher) where 
+                 searcher::SphericalNeighborSearcher) where
                  {T<:Real}
-                 
-  K       = searcher.K
-  inds, _ = knn(searcher.tree, xₒ, K, true)
+
+  k       = searcher.K
+  inds, _ = GeoStatsBase.knn(searcher.tree, xₒ, k, true)
   locs    = view(searcher.locs, inds)
 
-  @inbounds for i in 1:K
+  @inbounds for i in 1:k
     neighbors[i] = locs[i]
   end
   # change to broadcast?
 
-  K
+  k
 end

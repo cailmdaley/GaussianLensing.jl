@@ -62,42 +62,44 @@ isstationary(::CachedCMBVariogram)   = true
 @estimsolver CMBKriging begin
   @param variogram = CachedCMBVariogram{𝚯}(
     "/home/cailmdaley/spt/datafiles/CMB_variogram_lookup.txt")
-  @param K = 10
+  @param k = 10
+  @param estimator = OrdinaryKriging(variogram)
 end
 
 function preprocess(problem::EstimationProblem, solver::CMBKriging)
   # retrieve problem info
   pdata = data(problem)
   pdomain = domain(problem)
+  params = solver.params
 
   # result of preprocessing
   preproc = Dict{Symbol,NamedTuple}()
 
   for (var, V) in variables(problem)
     # get user parameters
-    varparams = var ∈ keys(solver.params) ? solver.params[var] : CMBKrigingParam()
+    varparams = var ∈ keys(params) ? params[var] : CMBKrigingParam()
 
+	estimator = varparams.estimator
     # determine which Kriging variant to use
-    estimator = OrdinaryKriging(varparams.variogram)
 
     path = SimplePath(pdomain)
 
     # determine maximum number of conditioning neighbors
-    K = varparams.K
-    if varparams.K ≠ nothing
+    k = varparams.k
+    if k ≠ nothing
       # locations with data for given variable
       datalocs = collect(keys(datamap(problem, var)))
 	  searchdomain = domain(pdata)
       # spherical K nearest neighbor searcher
-      neighsearcher = SphericalNeighborSearcher(searchdomain, datalocs, K)
+      neighsearcher = SphericalNeighborSearcher(searchdomain, datalocs, k)
     else
       # use all data points as neighbors
       neighsearcher = nothing
     end
 
     # save preprocessed input
-    preproc[var] = (estimator=estimator, path=path,
-										K=K, neighsearcher=neighsearcher)
+    preproc[var] = (estimator=estimator, path=path, k=k,
+				    neighsearcher=neighsearcher)
   end
 
   preproc
@@ -118,7 +120,7 @@ function GeoStatsBase.solve(problem::EstimationProblem, solver::CMBKriging)
   μs = []; σs = []
 
   for (var, V) in variables(problem)
-    if preproc[var].K ≠ nothing
+    if preproc[var].k ≠ nothing
       # perform Kriging with reduced number of neighbors
       varμ, varσ = solve_locally(problem, var, preproc)
     else
@@ -139,7 +141,7 @@ function solve_locally(problem::EstimationProblem, var::Symbol, preproc)
     pdomain = domain(problem)
 
     # unpack preprocessed parameters
-    estimator, path, K, neighsearcher = preproc[var]
+    estimator, path, k, neighsearcher = preproc[var]
 
     # determine value type
     V = variables(problem)[var]
@@ -153,9 +155,9 @@ function solve_locally(problem::EstimationProblem, var::Symbol, preproc)
     xₒ = GeoStatsBase.MVector{ndims(pdomain),coordtype(pdomain)}(undef)
 
     # pre-allocate memory for neighbors
-    neighbors = Vector{Int}(undef, K)
-    X = Matrix{coordtype(pdata)}(undef, ndims(pdata), K)
-		z = Vector{V}(undef, K)
+    neighbors = Vector{Int}(undef, k)
+    X = Matrix{coordtype(pdata)}(undef, ndims(pdata), k)
+		z = Vector{V}(undef, k)
 
     # estimation loop
     for location in path
@@ -185,7 +187,7 @@ function solve_globally(problem::EstimationProblem, var::Symbol, preproc)
     pdomain = domain(problem)
 
     # unpack preprocessed parameters
-    estimator, path, K, neighsearcher = preproc[var]
+    estimator, path, k, neighsearcher = preproc[var]
 
     # determine value type
     V = variables(problem)[var]
@@ -213,15 +215,12 @@ function solve_globally(problem::EstimationProblem, var::Symbol, preproc)
     varμ, varσ
 end
 
-function gp_interpolate(y::Dict, X::Matrix, Xₒ::Matrix, maxneighbors=10)
+function gp_interpolate(y::Dict, X::Matrix, Xₒ::Matrix, solver=CMBKriging())
 	length(y) != 1 && throw("Multiple fields not implemented :(")
 	var = collect(keys(y))[1]
 
 	pdata    = PointSetData(Dict(y), X)
 	pdomain  = PointSet(Xₒ)
-	problem = EstimationProblem(pdata, pdomain, var,
-								mapper=CopyMapper())
-	solver = CMBKriging()
-
-	return solve(problem, solver)
+	problem = EstimationProblem(pdata, pdomain, var, mapper=CopyMapper())
+	solution = solve(problem, solver)
 end

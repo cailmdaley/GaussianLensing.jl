@@ -20,19 +20,6 @@ end
 # 		read_Cℓs()), m.resolution.nside)[2:end, mm.inds]
 	# end
 
-function make_postage_stamps(m::Map, dir)
-	!isdir(dir) && mkdir(dir)
-	total = 0
-
-	for i in [0.5 1. 2. 3. 4. 5. 10. 15. 20. 30. 40. 50.]
-		println(i)
-		@time mm = MaskedMap(m, (-i/2, i/2), (total, total+i))
-		w = lpad(i, 4, "0")
-		saveMaskedMap(mm, joinpath(dir, "$(w)x$(i).dat"))
-		total += i + 1
-	end
-end
-
 ###########################################################################
 # Methods for plotting Masked Maps
 

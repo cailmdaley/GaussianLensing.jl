@@ -186,9 +186,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[GR]]
 deps = ["Base64", "DelimitedFiles", "LinearAlgebra", "Pkg", "Printf", "Random", "Serialization", "Sockets", "Test"]
-git-tree-sha1 = "9dff2d231311da78648abfa3287e3458a578d2f8"
+git-tree-sha1 = "b4c31b6377b6d51b6c69a3a9737d10c34d43974e"
 uuid = "28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71"
-version = "0.40.0"
+version = "0.41.0"
 
 [[GeoStats]]
 deps = ["Distances", "Distributed", "Distributions", "GeoStatsBase", "KrigingEstimators", "LinearAlgebra", "Random", "RecipesBase", "Reexport", "StaticArrays", "Variography"]
@@ -216,7 +216,7 @@ version = "0.7.5"
 
 [[Healpix]]
 deps = ["DelimitedFiles", "FITSIO", "Printf", "PyCall", "RecipesBase", "Test"]
-git-tree-sha1 = "3a5e6b400b2d2f9c8794c1861573c78cc3f5dd86"
+git-tree-sha1 = "89d79b03657653dc7558447cb09ceb3b5363fef2"
 repo-rev = "dev"
 repo-url = "https://github.com/cailmdaley/Healpix.jl.git"
 uuid = "ef1d1864-a8c4-11e9-1f31-07a69026a305"
