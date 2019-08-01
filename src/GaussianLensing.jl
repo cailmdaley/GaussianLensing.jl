@@ -23,7 +23,7 @@ export
 @reexport using Unitful, UnitfulAstro
 using GeoStatsBase
 using KrigingEstimators: OrdinaryKriging, fit, predict
-using Variography: Variogram
+import Variography
 using Distances: Metric, Haversine
 using Interpolations: interpolate, Linear, BSpline, ScaledInterpolation, scale
 using Jacobi: legendre

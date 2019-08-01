@@ -14,7 +14,9 @@ abstract type B <: CMBQuantity end
 abstract type ϕ <: CMBQuantity end
 
 abstract type AbstractCMBVariogram{Q <: CMBQuantity, T <: Real,
-								   D <: Metric} <: Variogram{T,D} end
+								   D <: Metric} <: Variography.Variogram{T,D} end
+Variography.isstationary(::AbstractCMBVariogram) = true
+Variography.sill(γ::AbstractCMBVariogram) = 12154.083873925385
 
 struct CMBVariogram{Q, T, D} <: AbstractCMBVariogram{Q, T, D}
 	Cℓs::Vector{T}
@@ -28,7 +30,6 @@ end
 
 (γ::CMBVariogram)(Δβ::Float64) = γ.σ₀² - covariance(Δβ, γ.Cℓs)
 (γ::CMBVariogram)(βx, βy) = γ(evaluate(γ.distance, βx, βy))
-isstationary(::CMBVariogram) = true
 
 function cache(γ::CMBVariogram, Δβs, path)
 	variogram_vals  = [γ.σ₀² - covariance(Δβ, γ.Cℓs) for Δβ in Δβs]
@@ -57,7 +58,6 @@ function CachedCMBVariogram{Q}(path::String) where Q <: CMBQuantity
 end
 (γ::CachedCMBVariogram)(Δβ::Float64) = γ.γinterpolator(Δβ)
 (γ::CachedCMBVariogram)(βx, βy)      = γ(evaluate(γ.distance, βx, βy))
-isstationary(::CachedCMBVariogram)   = true
 
 @estimsolver CMBKriging begin
   @param variogram = CachedCMBVariogram{𝚯}(
@@ -224,3 +224,7 @@ function gp_interpolate(y::Dict, X::Matrix, Xₒ::Matrix, solver=CMBKriging())
 	problem = EstimationProblem(pdata, pdomain, var, mapper=CopyMapper())
 	solution = solve(problem, solver)
 end
+
+#--------------
+# FITTING STEP
+#--------------

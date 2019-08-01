@@ -28,7 +28,7 @@ function search!(neighbors::AbstractVector{Int},
                  searcher::SphericalNeighborSearcher) where
                  {T<:Real}
 
-  k       = searcher.K
+  k       = searcher.k
   inds, _ = GeoStatsBase.knn(searcher.tree, xₒ, k, true)
   locs    = view(searcher.locs, inds)
 
